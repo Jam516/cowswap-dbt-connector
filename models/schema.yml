@@ -1,0 +1,100 @@
+version: 2
+
+sources:
+  - name: cow_protocol_base
+    tables:
+      - name: trades
+  - name: cow_protocol_ethereum
+    tables:
+      - name: trades
+  - name: cow_protocol_arbitrum
+    tables:
+      - name: trades
+  - name: cow_protocol_polygon
+    tables:
+      - name: trades
+  - name: cow_protocol_bnb
+    tables:
+      - name: trades
+  - name: cow_protocol_avalanche_c
+    tables:
+      - name: trades
+  - name: prices
+    tables:
+      - name: day
+  - name: dune
+    tables:
+      - name: blockchains
+  - name: coinbase_shared
+    tables:
+      - name: result_cow_base_raw_orders
+      - name: result_cow_ethereum_raw_orders
+      - name: result_cow_arbitrum_raw_orders
+      - name: result_cow_polygon_raw_orders
+      - name: result_cow_bnb_raw_orders
+      - name: result_cow_avalanche_c_raw_orders
+
+models:
+  - name: dune_cowswap_trades
+    description: "Partner-filtered CoW Swap trades with partner fee conversions and datashare sync enabled."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - block_date
+              - blockchain
+              - order_uid
+              - tx_hash
+    columns:
+      - name: block_date
+        description: "Date used for incremental partitioning and datashare sync windows."
+        tests:
+          - not_null
+      - name: blockchain
+        description: "Normalized blockchain name for the trade output."
+        tests:
+          - not_null
+      - name: order_uid
+        description: "CoW Swap order identifier."
+        tests:
+          - not_null
+      - name: tx_hash
+        description: "Transaction hash for the fill."
+        tests:
+          - not_null
+      - name: block_time
+        description: "Timestamp when the trade was executed."
+      - name: trader
+        description: "Trader address."
+      - name: usd_value
+        description: "Trade value in USD from the curated trades table."
+      - name: surplus_usd
+        description: "Trade surplus in USD."
+      - name: order_type
+        description: "CoW order type."
+      - name: partial_fill
+        description: "Whether the order was partially filled."
+      - name: sell_token_symbol
+        description: "Symbol of the token sold."
+      - name: sell_token_address
+        description: "Address of the token sold."
+      - name: units_sold
+        description: "Units sold."
+      - name: buy_token_symbol
+        description: "Symbol of the token bought."
+      - name: buy_token_address
+        description: "Address of the token bought."
+      - name: units_bought
+        description: "Units bought."
+      - name: partner_fee_partner_cut_native
+        description: "Partner share of the fee in native token units."
+      - name: fee_token_address
+        description: "Protocol fee token address."
+      - name: fee_token_native_price
+        description: "Native-token-denominated fee price from order data."
+      - name: receiver
+        description: "Trade receiver address."
+      - name: app_data
+        description: "App data attached to the order."
+      - name: partner_fee_partner_cut_usd
+        description: "Partner share of the fee converted to USD."
