@@ -1,8 +1,8 @@
 name: dbt prod incremental
 
 on:
-  # schedule:
-  #   - cron: '0 * * * *'  # Run every hour at minute 0
+  schedule:
+    - cron: '0 2 * * *'  # Run daily at 02:00 UTC
   # NOTE: Schedule is disabled by default. Uncomment when ready to enable hourly production runs.
   # Check the README.md to make sure you understand the credit costs associated with running dbt.
   workflow_dispatch:  # Allow manual triggers
